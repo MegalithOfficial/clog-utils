@@ -2,6 +2,9 @@
 
 This is a custom logging library that allows you to create and apply log presets, change log styles, and customize log messages in your Node.js applications while still using `console.log`.
 
+## Important Announcement
+This module still in beta, please dont hesitate to Collaborate/Report issue!
+
 ## Installation
 
 You can install the library using npm:
