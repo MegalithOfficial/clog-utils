@@ -1,0 +1,8 @@
+src/interfaces
+src
+tests
+.npmrc
+.prettierrc
+.gitignore
+.github
+.vscode

@@ -1,0 +1,39 @@
+{
+  "name": "clog-utils",
+  "version": "1.0.0",
+  "description": "Enhance Node.js console logging with clog-utils. Customize log presets, style messages, and reduce clutter.",
+  "main": "lib/main.js",
+  "types": "lib/main.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node lib/main.js",
+    "test": "ts-node tests/test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MegalithOffical/clog-utils.git"
+  },
+  "keywords": [
+    "Node.js",
+    "Logging",
+    "Console",
+    "Customizable",
+    "Debugging",
+    "Utility",
+    "Enhancement",
+    "Development",
+    "Debug",
+    "Utility Module",
+    "console customization"
+  ],
+  "author": "MegalithOffical",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/MegalithOffical/clog-utils/issues"
+  },
+  "homepage": "https://github.com/MegalithOffical/clog-utils#readme",
+  "devDependencies": {
+    "@types/node": "^20.6.3",
+    "typescript": "^5.2.2"
+  }
+}
