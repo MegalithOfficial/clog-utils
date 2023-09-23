@@ -45,6 +45,16 @@ console.log('This is a warning message.',  { preset: { prefix: 'Warning', prefix
 // you can use logger.log instead console.log if you want to.
 ```
 
+## Anti Spam feature
+
+Clog Utils will begin tracking duplicate console messages, and you can experiment with this functionality using setInterval:
+
+```javascript
+setInterval(() => {
+ console.log('This is an counting message.', 'info'); // Output: [Info] This is an counting message. (number of duplicates)
+}, 1000)
+```
+
 ## Usages
 
 ### Restoring Original Logging
