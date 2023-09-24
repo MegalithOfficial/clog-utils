@@ -23,14 +23,17 @@ import { clogUtils } from 'clog-utils';
 // or CJS
 const { clogUtils } = require("clog-utils");
 
-const logger = new clogUtils({ // example Presets
-  warning: {
-    prefix: '[Warning]',
-    prefixcolor: 'red',
-  },
-  info: {
-    prefix: '[Info]',
-    prefixcolor: '#a8c9e3',
+const logger = new clogUtils({
+//disableModification: false, --> Disables the console.log modification. Default: false
+  presets: { // preset examples...
+    error: {
+      prefix: '[error]',
+      prefixcolor: 'red',
+    },
+    info: {
+      prefix: '[info]',
+      prefixcolor: '#a8c9e3',
+    }
   }
 });
 ```

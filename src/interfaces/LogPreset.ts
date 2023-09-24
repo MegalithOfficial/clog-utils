@@ -1,5 +1,6 @@
 export interface LogPreset {
   prefix: string;
+  messageStructure?: string;
   prefixcolor?:
   | "black"
   | "red"

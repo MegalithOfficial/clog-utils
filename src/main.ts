@@ -1,4 +1,6 @@
+import { Options, defaultOptions } from './interfaces/clogUtilsOptions';
 import { LogPreset } from './interfaces/LogPreset';
+import { format } from "node:util";
 
 class clogUtils {
   private originalConsoleLog: (...args: any[]) => void;
@@ -6,20 +8,22 @@ class clogUtils {
   private messageCount: number = 0;
   private prefix: string = '';
   private presets: Record<string, LogPreset> = {};
-  private prefixColor: string = '\x1b[0m'; // reset color
+  private prefixColor: string = '\x1b[0m';
   private defaultPreset: LogPreset = {
     prefix: '',
+    messageStructure: "%%prefix%% %%message%% (%%counter%%)",
     prefixcolor: 'white',
   };
 
-  constructor(presets?: Record<string, LogPreset>) {
+  constructor(opt: Options = defaultOptions) {
+    opt.disableModification = opt.disableModification ?? false;
     this.originalConsoleLog = console.log;
-    console.log = (...args: any[]) => this.log(...args);
 
-    if (presets) {
-      this.presets = presets;
-    }
+    if(!opt.disableModification) console.log = (...args: any[]) => this.log(...args);
+    if (opt.presets) this.presets = opt.presets;
+    process.stdout.write("")
   }
+  
 
   public log(...args: any[]): void {
     let preset = args[args.length - 1];
@@ -31,15 +35,7 @@ class clogUtils {
       else preset = undefined;
     } else preset = undefined;
 
-    const formattedArgs = args.map(arg => {
-      if (Array.isArray(arg) || (typeof arg === 'object' && arg !== null)) {
-        return JSON.stringify(arg, null, 2);
-      }
-      return arg;
-    });
-  
-    const currentMessage: string = formattedArgs.join(' ');
-
+    const currentMessage: string = format.apply(this, args);
 
     if (!preset || preset === undefined) {
       preset = this.defaultPreset;
@@ -62,6 +58,17 @@ class clogUtils {
     }
   }
 
+  private replacePlaceholders(messageStructure: string, replacements: Record<string, string>): string {
+    const replacedMessage = messageStructure.replace(/%%([^%]+)%%/gi, (match, placeholder) => {
+      if (replacements.hasOwnProperty(placeholder)) {
+        return replacements[placeholder];
+      }
+      return match;
+    });
+  
+    return replacedMessage;
+  };
+  
   public static resolveColor(colorName: string): string {
     if (!colorName || typeof colorName !== "string") throw Error("Color name must be a string!");
 
