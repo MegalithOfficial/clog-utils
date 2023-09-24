@@ -5,13 +5,14 @@ import { format } from "node:util";
 class clogUtils {
   private originalConsoleLog: (...args: any[]) => void;
   private lastMessage: string | null = null;
+  private messageStructure: string = '';
   private messageCount: number = 0;
   private prefix: string = '';
   private presets: Record<string, LogPreset> = {};
   private prefixColor: string = '\x1b[0m';
   private defaultPreset: LogPreset = {
     prefix: '',
-    messageStructure: "%%prefix%% %%message%% (%%counter%%)",
+    messageStructure: "%%prefix%%\x1b[0m%%message%% %%counter%%",
     prefixcolor: 'white',
   };
 
@@ -19,11 +20,10 @@ class clogUtils {
     opt.disableModification = opt.disableModification ?? false;
     this.originalConsoleLog = console.log;
 
-    if(!opt.disableModification) console.log = (...args: any[]) => this.log(...args);
+    if (!opt.disableModification) console.log = (...args: any[]) => this.log(...args);
     if (opt.presets) this.presets = opt.presets;
-    process.stdout.write("")
   }
-  
+
 
   public log(...args: any[]): void {
     let preset = args[args.length - 1];
@@ -35,40 +35,46 @@ class clogUtils {
       else preset = undefined;
     } else preset = undefined;
 
-    const currentMessage: string = format.apply(this, args);
+    let currentMessage: string = format.apply(this, args);
 
     if (!preset || preset === undefined) {
       preset = this.defaultPreset;
       this.prefix = preset.prefix;
+      this.messageStructure = preset.messageStructure || "%%prefix%%\x1b[0m%%message%% %%counter%%";
       this.prefixColor = clogUtils.resolveColor(preset?.prefixcolor || 'white');
     } else {
       this.prefix = `${preset.prefix} `;
+      this.messageStructure = preset.messageStructure || "%%prefix%%\x1b[0m%%message%% %%counter%%";
       this.prefixColor = clogUtils.resolveColor(preset.prefixcolor || 'white');
     }
 
-    if (currentMessage === this.lastMessage) {
+    let replacements: Record<string, string> = {
+      'prefix': `${this.prefixColor}${this.prefix}\x1b[0m`,
+      'prefixWithoutColor': `${this.prefix}\x1b[0m`,
+      'message': currentMessage,
+      'counter': `(${this.messageCount})`,
+    };
+
+    if (currentMessage === this.lastMessage) { 
       this.messageCount++;
       process.stdout.moveCursor(0, -1);
       process.stdout.clearLine(0);
-      this.originalConsoleLog(`${this.prefixColor}${this.prefix}\x1b[0m${currentMessage} (${this.messageCount})`);
+
+      this.originalConsoleLog(this.replacePlaceholders(this.messageStructure, replacements));
     } else {
-      this.lastMessage = currentMessage;
+      replacements['message'] = currentMessage.replaceAll(/%%counter%%/gi, "");
+      this.lastMessage = replacements['message'];
       this.messageCount = 1;
-      this.originalConsoleLog(`${this.prefixColor}${this.prefix}\x1b[0m${currentMessage}`);
+      this.originalConsoleLog(this.replacePlaceholders(this.messageStructure.replaceAll("(%%counter%%)", ""), replacements));
     }
   }
 
   private replacePlaceholders(messageStructure: string, replacements: Record<string, string>): string {
-    const replacedMessage = messageStructure.replace(/%%([^%]+)%%/gi, (match, placeholder) => {
-      if (replacements.hasOwnProperty(placeholder)) {
-        return replacements[placeholder];
-      }
-      return match;
+    return messageStructure.replace(/%%([^%]+)%%/gi, (match, placeholder) => {
+      return replacements[placeholder];
     });
-  
-    return replacedMessage;
   };
-  
+
   public static resolveColor(colorName: string): string {
     if (!colorName || typeof colorName !== "string") throw Error("Color name must be a string!");
 
@@ -147,7 +153,7 @@ class clogUtils {
 
   public getAllPresets(): Record<string, LogPreset>[] {
     const presetsArray: Record<string, LogPreset>[] = [];
-  
+
     for (const key in this.presets) {
       if (this.presets.hasOwnProperty(key)) {
         const presetObj: Record<string, LogPreset> = {};
@@ -155,7 +161,7 @@ class clogUtils {
         presetsArray.push(presetObj);
       }
     }
-  
+
     return presetsArray;
   };
 };

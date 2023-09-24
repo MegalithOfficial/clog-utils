@@ -117,7 +117,7 @@ Get the configuration of a preset:
 
 ```javascript
 const infoPreset = logger.getPreset('info');
-console.log(infoPreset); // { prefix: '[Info]', prefixcolor: 'green' }
+console.log(infoPreset); // { prefix: '[Info]', prefixcolor: 'green', messageStructure: "%%prefix%% %%message%% %%counter%%" }
 ```
 
 #### Get All Presets
@@ -128,10 +128,43 @@ Get all presets as an array of objects:
 const allPresets = logger.getAllPresets();
 console.log(allPresets);
 // [
-//   { info: { prefix: '[Info]', prefixcolor: 'green' } },
-//   { warning: { prefix: '[Warning]', prefixcolor: 'yellow' } },
-//   { custom: { prefix: '[Custom]', prefixcolor: '\x1b[35m' } }
+//   { info: { prefix: '[Info]', prefixcolor: 'green', messageStructure: "%%prefix%% %%message%% %%counter%%" } },
+//   { warning: { prefix: '[Warning]', prefixcolor: 'yellow', messageStructure: "%%prefix%% %%message%% %%counter%%" } },
+//   { custom: { prefix: '[Custom]', prefixcolor: '\x1b[35m', messageStructure: "%%prefix%% %%message%% %%counter%%" } }
 // ]
+```
+
+## Message Structures
+
+Now you can setup customised message templates with Message Structures:
+
+```javascript 
+const logger = new clogUtils({
+  presets: { 
+    error: {
+      prefix: '[error]',
+      prefixcolor: 'red',
+      messageStructure: "%%counter%% %%message%% %%prefix%%"
+    },
+    info: {
+      prefix: '[info]',
+      prefixcolor: '#a8c9e3',
+      // Default is --> messageStructure: "%%prefix%% %%message%% %%counter%%"
+    }
+  }
+});
+
+/*
+    Placeholders:
+
+    %%prefix%% - Prefix with the prefixColor.
+    %%prefixWithoutColor%% - Prefix without the prefixColor.
+    %%message%% - Your message content.
+    %%counter%% - Anti-spam feature's counter.
+*/
+
+console.log("This message sent with Custom message structure.", "error") 
+// Output: (0) This message sent with Custom message structure. [error]
 ```
 
 ## License

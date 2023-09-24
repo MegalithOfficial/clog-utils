@@ -1,5 +1,4 @@
 import { clogUtils } from "../src/main";
-import utils from "node:util"
 
 const logger = new clogUtils({
   disableModification: false,
@@ -7,6 +6,7 @@ const logger = new clogUtils({
     error: {
       prefix: '[error]',
       prefixcolor: 'red',
+      messageStructure: "%%counter%% %%message%% %%prefix%%"
     },
     info: {
       prefix: '[info]',
@@ -15,7 +15,5 @@ const logger = new clogUtils({
   }
 });
 
-logger.addPreset({ 1: { prefix: "hi" } })
-
-console.log("hello", "this is broken", ["hello", { "hi": "hello"} ], null, undefined, "error")
+setInterval(() => console.log("test", "error"), 1000)
 
