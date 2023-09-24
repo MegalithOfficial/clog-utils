@@ -11,9 +11,10 @@ const logger = new clogUtils({
     info: {
       prefix: '[info]',
       prefixcolor: '#a8c9e3',
+      messageStructure: "%%message%% %%prefix%%"
     }
   }
 });
 
-setInterval(() => console.log("test", "error"), 1000)
+setInterval(() => console.log("test", "info"), 1000)
 
