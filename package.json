@@ -6,7 +6,6 @@
   "types": "lib/main.d.ts",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node lib/main.js",
     "test": "ts-node tests/test.ts"
   },
   "repository": {
