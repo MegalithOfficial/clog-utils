@@ -1,4 +1,5 @@
 # Clog Utils
+[![CodeQL](https://github.com/MegalithOffical/clog-utils/workflows/CodeQL/badge.svg)](https://github.com/MegalithOffical/clog-utils/actions?query=workflow%3ACodeQL)
 
 This is a custom logging library that allows you to create and apply log presets, change log styles, and customize log messages in your Node.js applications while still using `console.log`.
 
