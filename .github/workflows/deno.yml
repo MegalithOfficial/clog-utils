@@ -36,7 +36,7 @@ jobs:
       #   run: deno fmt --check
 
       - name: Run linter
-        run: deno lint --unstable --allow-all
+        run: deno lint --unstable
 
       - name: Run tests
-        run: deno test --unstable --allow-all
+        run: deno test --unstable
