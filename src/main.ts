@@ -92,7 +92,7 @@ class clogUtils {
     } else if(data instanceof Error) {
       let formatteddata = data.stack?.split("\n") || [];
       formatteddata.shift();
-      this.log(formatteddata.join("\n"), { preset: { prefix: ` \x1b[1;30m${data.name} \x1b[0m ${data.message}`, prefixcolor: "bgred", messageStructure: ` \n%%prefix%%\x1b[0m  \n\n${clogUtils.resolveColor("#595959")}%%message%%\x1b[0m`, disableAntiSpam: true } })
+      this.log(formatteddata.join("\n"), { preset: { prefix: ` \x1b[1;30m${data.name} \x1b[0m ${data.message}`, prefixcolor: "bgred", messageStructure: ` \n%%prefix%%\x1b[0m  \n\n${clogUtils.resolveColor("#595959")}%%message%%\n\nNode.js v${process.versions.node}\x1b[0m`, disableAntiSpam: true } })
     }
   }
 

@@ -11,9 +11,11 @@ const logger = new clogUtils({
     info: {
       prefix: '[info]',
       prefixcolor: '#a8c9e3',
-      messageStructure: "%%message%% %%prefix%%"
     }
   }
 });
-setInterval(() => logger.warn("test"), 1000)
 
+console.log("hello!")
+logger.warn("This is a warning");
+logger.error("This is an error");
+logger.error(new Error("This is an error"));
