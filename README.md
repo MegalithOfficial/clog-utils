@@ -73,6 +73,7 @@ setInterval(() => {
  console.log('This is a counting message.', 'info'); // Output: [Info] This is a counting message. (number of duplicates)
 }, 1000)
 ```
+![](https://github.com/MegalithOffical/clog-utils/blob/main/images/counting.gif)
 
 You can disable the Anti-Spam feature by adding the `disableAntiSpam` option to presets:
 
@@ -101,6 +102,9 @@ logger.error("This is an error");
 // Or for error objects
 logger.error(new Error("This is an error"));
 ```
+![](https://github.com/MegalithOffical/clog-utils/blob/main/images/error.png)
+![](https://github.com/MegalithOffical/clog-utils/blob/main/images/warning.png)
+![](https://github.com/MegalithOffical/clog-utils/blob/main/images/errorwithcontructor.png)
 
 ### Restoring Original Logging 🔄
 
