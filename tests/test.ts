@@ -15,6 +15,5 @@ const logger = new clogUtils({
     }
   }
 });
-
-setInterval(() => console.log("test", "info"), 1000)
+setInterval(() => logger.warn("test"), 1000)
 

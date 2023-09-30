@@ -8,11 +8,13 @@ class clogUtils {
   private messageStructure: string = '';
   private messageCount: number = 0;
   private prefix: string = '';
+  private disableAntiSpam = false;
   private presets: Record<string, LogPreset> = {};
   private prefixColor: string = '\x1b[0m';
   private defaultPreset: LogPreset = {
     prefix: '',
     messageStructure: "%%prefix%%\x1b[0m%%message%% %%counter%%",
+    disableAntiSpam: false,
     prefixcolor: 'white',
   };
 
@@ -38,11 +40,13 @@ class clogUtils {
     let currentMessage: string = format.apply(this, args);
 
     if (!preset || preset === undefined) {
-      preset = this.defaultPreset;
+      preset = this.defaultPreset;    
       this.prefix = preset.prefix;
+      this.disableAntiSpam = preset.disableAntiSpam || false;
       this.messageStructure = preset.messageStructure || "%%prefix%%\x1b[0m%%message%% %%counter%%";
       this.prefixColor = clogUtils.resolveColor(preset?.prefixcolor || 'white');
     } else {
+      this.disableAntiSpam = preset.disableAntiSpam || false;
       this.prefix = `${preset.prefix} `;
       this.messageStructure = preset.messageStructure || "%%prefix%%\x1b[0m%%message%% %%counter%%";
       this.prefixColor = clogUtils.resolveColor(preset.prefixcolor || 'white');
@@ -54,11 +58,14 @@ class clogUtils {
       'message': currentMessage,
       'counter': `(${this.messageCount})`,
     };
+    if (this.disableAntiSpam) replacements["counter"] = "";
 
-    if (currentMessage === this.lastMessage) { 
-      this.messageCount++;
-      process.stdout.moveCursor(0, -1);
-      process.stdout.clearLine(0);
+    if (currentMessage === this.lastMessage) {
+      if (!this.disableAntiSpam) {
+        this.messageCount++
+        process.stdout.moveCursor(0, -1);
+        process.stdout.clearLine(0);
+      };
 
       this.originalConsoleLog(this.replacePlaceholders(this.messageStructure, replacements));
     } else {
@@ -74,6 +81,20 @@ class clogUtils {
       return replacements[placeholder];
     });
   };
+
+  public warn(message: string): void {
+    this.log(message, { preset: { prefix: ` \x1b[1;30mWARNING \x1b[0m`, prefixcolor: "bgyellow", messageStructure: "%%prefix%%\x1b[0m%%message%% %%counter%%", disableAntiSpam: false } });
+  };
+
+  public error(data: string | Error) {
+    if(typeof data === "string") {
+      this.log(data, { preset: { prefix: ` \x1b[1;30mError \x1b[0m`, prefixcolor: "bgred", messageStructure: "%%prefix%%\x1b[0m %%message%%", disableAntiSpam: true } })
+    } else if(data instanceof Error) {
+      let formatteddata = data.stack?.split("\n") || [];
+      formatteddata.shift();
+      this.log(formatteddata.join("\n"), { preset: { prefix: ` \x1b[1;30m${data.name} \x1b[0m ${data.message}`, prefixcolor: "bgred", messageStructure: ` \n%%prefix%%\x1b[0m  \n\n${clogUtils.resolveColor("#595959")}%%message%%\x1b[0m`, disableAntiSpam: true } })
+    }
+  }
 
   public static resolveColor(colorName: string): string {
     if (!colorName || typeof colorName !== "string") throw Error("Color name must be a string!");
@@ -99,6 +120,14 @@ class clogUtils {
       brightmagenta: 95,
       brightcyan: 96,
       brightwhite: 97,
+      bgblack: 40,
+      bgred: 41,
+      bggreen: 42,
+      bgyellow: 43,
+      bgblue: 44,
+      bgmagenta: 45,
+      bgcyan: 46,
+      bgwhite: 47
     };
 
     if (colorName in colorCodes) {

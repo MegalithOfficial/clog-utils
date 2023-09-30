@@ -1,12 +1,12 @@
 export interface LogPreset {
   prefix: string;
   messageStructure?: string;
+  disableAntiSpam?: boolean;
   prefixcolor?:
   | "black"
   | "red"
   | "green"
   | "yellow"
-  | "blue"
   | "blue"
   | "magenta"
   | "cyan"
@@ -19,5 +19,13 @@ export interface LogPreset {
   | "brightmagenta"
   | "brightcyan"
   | "brightwhite"
+  | "bgblack"
+  | "bgred"
+  | "bggreen"
+  | "bgyellow"
+  | "bgblue"
+  | "bgmagenta"
+  | "bgcyan"
+  | "bgwhite"
   | string;
 };

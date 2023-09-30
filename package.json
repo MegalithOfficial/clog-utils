@@ -1,6 +1,6 @@
 {
   "name": "clog-utils",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Enhance Node.js console logging with clog-utils. Customize log presets, style messages, and reduce clutter.",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
@@ -32,7 +32,6 @@
   },
   "homepage": "https://github.com/MegalithOffical/clog-utils#readme",
   "devDependencies": {
-    "@types/node": "^20.6.3",
-    "typescript": "^5.2.2"
+    "@types/node": "^20.6.3"
   }
 }
