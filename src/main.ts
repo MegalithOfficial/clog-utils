@@ -32,7 +32,7 @@ class clogUtils {
 
     if (typeof args[args.length - 1] === "string" && this.presets[preset]) preset = this.presets[preset], args.splice(-1);
     else if (typeof preset === "object") {
-      if (typeof preset.preset === "string" && this.presets[preset]) preset = this.presets[preset.preset], args.splice(-1);
+      if (typeof preset.preset === "string" && this.presets[preset.preset]) preset = this.presets[preset.preset], args.splice(-1);
       else if (typeof preset.preset === "object") preset = preset.preset, args.splice(-1);
       else preset = undefined;
     } else preset = undefined;
