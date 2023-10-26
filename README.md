@@ -46,6 +46,12 @@ const logger = new clogUtils({
     info: {
       prefix: '[info]',
       prefixcolor: '#a8c9e3',
+    },
+    updatedInfo: function() {
+      returns {
+        prefix: `[info - Date: ${Date.now()}]`,
+        prefixcolor: '#a8c9e3',
+      }
     }
   }
 });
@@ -61,6 +67,8 @@ console.log('This is an informational message.', { preset: "info" });
 console.log('This is a warning message.', { preset: "Warning" });
 // or you can set temporary presets
 console.log('This is a warning message.',  { preset: { prefix: 'Warning', prefixcolor: 'Red' }});
+console.log('This is a warning message.',  { preset: function() { returns { prefix: 'Warning', prefixcolor: 'Red' } } });
+ 
 // You can also use logger.log instead of console.log if you prefer.
 ```
 
@@ -210,6 +218,33 @@ const logger = new clogUtils({
 
 console.log("This message is sent with a custom message structure.", "error") 
 // Output: (0) This message is sent with a custom message structure. [error]
+```
+
+## Console Saving 📝
+
+Console Saving is a utility that allows you to save messages written to the console to a log file. This is useful for keeping a record of console output or debugging information.
+
+```js
+const logger = new clogUtils({
+    consoleSave: { 
+      enabled: true, 
+      fileName: `ConsoleSave_${Date.now()}`, // you can add .txt to the end if you want to
+      path: "./logs" // Optional
+    },
+  presets: { 
+    error: {
+      prefix: '[error]',
+      prefixcolor: 'red',
+      messageStructure: "%%counter%% %%message%% %%prefix%%"
+    },
+    // Define more custom presets for your messages
+  }
+});
+
+// Your application code...
+
+// Console messages will be saved to the specified log file.
+
 ```
 
 ## License 📄
