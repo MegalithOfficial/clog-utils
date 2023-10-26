@@ -1,20 +1,11 @@
 import { clogUtils } from "../src/main";
 
 const logger = new clogUtils({
+  consoleSave: { enabled: true, fileName: `consolesave_${Date.now()}`, path: "./saves" },
   disableModification: false,
   presets: {
-    error: {
-      prefix: '[error]',
-      prefixcolor: 'red',
-      messageStructure: "%%counter%% %%message%% %%prefix%%"
-    }
+    test: { prefix: "TEST", disableAntiSpam: false }
   }
 });
-setInterval(() => {
-  console.log("hello!", {
-    preset: {
-      prefix: '[info]',
-      prefixcolor: '#a8c9e3',
-    }
-  })
-}, 500)
+
+setInterval(() => { console.log("this is a Test message!", { preset: { prefix: "TEST", disableAntiSpam: false } }) }, 100)
