@@ -3,7 +3,6 @@ import { LogPreset } from './interfaces/LogPreset';
 import { format } from "node:util";
 
 import * as fs from 'fs';
-import * as stream from 'stream';
 
 class clogUtils {
   private originalConsoleLog: (...args: any[]) => void;
@@ -21,8 +20,8 @@ class clogUtils {
     disableAntiSpam: false,
     prefixcolor: 'white',
   };
-  logFileStream: any;
-  consoleSave: any;
+  private logFileStream: any;
+  private consoleSave: any;
 
   constructor(opt: Options = defaultOptions) {
     opt.disableModification = opt.disableModification ?? false;
@@ -38,7 +37,10 @@ class clogUtils {
         this.consoleSave.fileName += '.txt';
       };
 
-      this.logFilePath = `${this.consoleSave.path}/${this.consoleSave.fileName}`;
+      this.logFilePath = this.consoleSave.path
+      ? `${this.consoleSave.path}/${this.consoleSave.fileName}`
+      : `${this.consoleSave.fileName}`;
+
       this.logFileStream = fs.createWriteStream(this.logFilePath, { flags: 'a', encoding: 'utf8' });
     } else this.logFileStream = null; 
     

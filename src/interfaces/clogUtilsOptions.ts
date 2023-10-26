@@ -8,7 +8,7 @@ export interface Options {
 
 export interface consoleSaveOptions {
   enabled: boolean, 
-  fileName?: string,
+  fileName: string,
   path?: string,
 }
 
@@ -17,5 +17,6 @@ export const defaultOptions: Options = {
   presets: {},
   consoleSave: {
     enabled: false,
+    fileName: `ConsoleSave_${Date.now()}`
   }
 };
