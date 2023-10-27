@@ -97,6 +97,55 @@ const logger = new clogUtils({
 });
 ```
 
+## Progress bar
+
+The Progress Bar is a tool that helps you monitor the progress of your projects. It's especially useful when you want to visualize the completion status of a task or process. 
+
+```javascript
+// ES/Typescript
+import { ProgressBar, progressbarPresets } from 'clog-utils';
+
+// CommonJS
+const { ProgressBar, progressbarPresets } = require("clog-utils");
+
+const bar = new ProgressBar({
+  maxValue: 100,
+  minValue: 0,
+  barDesign: { // Bar design is Optional
+      progressBarChar: "█",
+      emptyProgressBarChar: " ",
+      progressBarCharSuffix: ">"
+  }
+  // Or you can use Progress bar Presets: 
+  // barDesign: progressbarPresets.modern - (Others: modern2, legacy, legacy2, shades, emoji)
+});
+
+bar.start();
+
+bar.update(50);
+bar.update(70);
+bar.update(100, "Its Finished!"); // this will write the text to the right of the Progress bar.
+
+bar.end();
+
+```
+
+The `bar.update()` method also has an auto-stop feature, so using `bar.stop()` to stop the Progress Bar is not always necessary.
+
+## Progress Bar Preset Designs
+
+You can choose from a variety of preset designs for your Progress Bar by specifying the `barDesign` property:
+
+- `progressbarPresets.modern`
+- `progressbarPresets.modern2`
+- `progressbarPresets.legacy`
+- `progressbarPresets.legacy2`
+- And more
+
+Select a design that best suits your project's style.
+
+Enjoy tracking your progress with the Progress Bar!
+
 ## Usages 💡
 
 ### Warn and Error Functions ⚠️❌

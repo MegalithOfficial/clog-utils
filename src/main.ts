@@ -1,4 +1,6 @@
+import { progressBarOptions, progressBarDesign } from './interfaces/progressbarOptions';
 import { Options, defaultOptions } from './interfaces/clogUtilsOptions';
+import { ProgressBar, progressbarPresets } from './progressbar';
 import { LogPreset } from './interfaces/LogPreset';
 import { format } from "node:util";
 
@@ -263,4 +265,4 @@ class clogUtils {
   };
 };
 
-export { LogPreset, clogUtils };
+export { LogPreset, clogUtils, ProgressBar, progressBarDesign, progressBarOptions, progressbarPresets };
