@@ -8,7 +8,7 @@ import * as fs from 'fs';
 
 class clogUtils {
   private originalConsoleLog: (...args: any[]) => void;
-  private lastMessage: string | null = null;
+  private lastMessage: { content: any, lines: number } = { content: "", lines: 0 };
   private messageStructure: string = '';
   private messageCount: number = 0;
   private prefix: string = '';
@@ -40,12 +40,12 @@ class clogUtils {
       };
 
       this.logFilePath = this.consoleSave.path
-      ? `${this.consoleSave.path}/${this.consoleSave.fileName}`
-      : `${this.consoleSave.fileName}`;
+        ? `${this.consoleSave.path}/${this.consoleSave.fileName}`
+        : `${this.consoleSave.fileName}`;
 
       this.logFileStream = fs.createWriteStream(this.logFilePath, { flags: 'a', encoding: 'utf8' });
-    } else this.logFileStream = null; 
-    
+    } else this.logFileStream = null;
+
   }
 
 
@@ -55,36 +55,37 @@ class clogUtils {
 
     let currentMessage: string = format.apply(this, args);
     if (!preset || preset === undefined) preset = this.defaultPreset;
-    
+
     this.prefix = `${preset.prefix || this.defaultPreset.prefix} `;
     this.disableAntiSpam = preset.disableAntiSpam || false;
     this.messageStructure = preset.messageStructure || "%%prefix%%\x1b[0m%%message%% %%counter%%";
     this.prefixColor = clogUtils.resolveColor(preset.prefixcolor || 'white');
-    
+
     let replacements: Record<string, string> = {
       'prefix': `${this.prefixColor}${this.prefix}\x1b[0m`,
       'prefixWithoutColor': `${this.prefix}\x1b[0m`,
       'message': currentMessage,
-      'counter':  !this.disableAntiSpam ? `(${this.messageCount})` : "",
+      'counter': !this.disableAntiSpam ? `(${this.messageCount})` : "",
     };
 
     let finalMessage = "";
 
-    if(currentMessage === this.lastMessage) {
+    if (currentMessage === this.lastMessage.content) {
       if (!this.disableAntiSpam) {
         this.messageCount++
-        process.stdout.moveCursor(0, -1);
+        process.stdout.moveCursor(0, this.lastMessage.lines === 1 || this.lastMessage.lines  === 0 ? -1 : parseInt(`-${this.lastMessage.lines}`));
         process.stdout.clearLine(0);
       };
 
-      finalMessage = this.replacePlaceholders(this.messageStructure, replacements) 
+      finalMessage = this.replacePlaceholders(this.messageStructure, replacements)
     } else {
       finalMessage = this.replacePlaceholders(this.messageStructure, replacements)
-      this.lastMessage = currentMessage;
+      this.lastMessage.content = currentMessage;
+      this.lastMessage.lines = this.countLines(currentMessage);
       this.messageCount = 1;
     }
 
-    this.originalConsoleLog(finalMessage)
+     this.originalConsoleLog(finalMessage)
 
     if (this.consoleSave && this.consoleSave.enabled) {
       this.saveToLog(finalMessage);
@@ -98,7 +99,11 @@ class clogUtils {
       this.logFileStream.write(logMessage);
     }
   };
-  
+
+  private countLines(str: string): number {
+    return (str.split(/\r\n|\r|\n/)).length;
+  };
+
   private replacePlaceholders(messageStructure: string, replacements: Record<string, string>): string {
     return messageStructure.replace(/%%([^%]+)%%/gi, (match, placeholder) => {
       return replacements[placeholder];
